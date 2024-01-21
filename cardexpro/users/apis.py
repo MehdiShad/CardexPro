@@ -1,44 +1,26 @@
 from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework import serializers
-
-from django.core.validators import MinLengthValidator
-from .validators import number_validator, special_char_validator, letter_validator
-from cardexpro.users.models import BaseUser , Profile
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from cardexpro.users.models import BaseUser
 from cardexpro.api.mixins import ApiAuthMixin
-from cardexpro.users.selectors import get_profile
-from cardexpro.users.services import register 
-from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
-
+from cardexpro.users.services import register
 from drf_spectacular.utils import extend_schema
-
-
-class ProfileApi(ApiAuthMixin, APIView):
-
-    class OutPutSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = Profile 
-            fields = ("bio", "posts_count", "subscriber_count", "subscription_count")
-
-    @extend_schema(responses=OutPutSerializer)
-    def get(self, request):
-        query = get_profile(user=request.user)
-        return Response(self.OutPutSerializer(query, context={"request":request}).data)
+from django.core.validators import MinLengthValidator
+from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
+from .validators import number_validator, special_char_validator, letter_validator
 
 
 class RegisterApi(APIView):
 
-
     class InputRegisterSerializer(serializers.Serializer):
         email = serializers.EmailField(max_length=255)
-        bio = serializers.CharField(max_length=1000, required=False)
         password = serializers.CharField(
                 validators=[
                         number_validator,
                         letter_validator,
                         special_char_validator,
-                        MinLengthValidator(limit_value=10)
+                        MinLengthValidator(limit_value=8)
                     ]
                 )
         confirm_password = serializers.CharField(max_length=255)
@@ -85,7 +67,6 @@ class RegisterApi(APIView):
             user = register(
                     email=serializer.validated_data.get("email"),
                     password=serializer.validated_data.get("password"),
-                    bio=serializer.validated_data.get("bio"),
                     )
         except Exception as ex:
             return Response(
