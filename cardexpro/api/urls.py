@@ -1,5 +1,5 @@
 from django.urls import path, include
 
 urlpatterns = [
-    # path('blog/', include(('cardexpro.blog.urls', 'blog')))
+    path('auth/', include(('cardexpro.authentication.urls', 'auth')))
 ]

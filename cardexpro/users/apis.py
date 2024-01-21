@@ -27,7 +27,7 @@ class RegisterApi(APIView):
         
         def validate_email(self, email):
             if BaseUser.objects.filter(email=email).exists():
-                raise serializers.ValidationError("email Already Taken")
+                raise serializers.ValidationError("Email already taken")
             return email
 
         def validate(self, data):
@@ -73,5 +73,5 @@ class RegisterApi(APIView):
                     f"Database Error {ex}",
                     status=status.HTTP_400_BAD_REQUEST
                     )
-        return Response(self.OutPutRegisterSerializer(user, context={"request":request}).data)
+        return Response(self.OutPutRegisterSerializer(user, context={"request": request}).data)
 
