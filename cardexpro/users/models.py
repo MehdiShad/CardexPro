@@ -53,8 +53,6 @@ class BaseUser(BaseModel, AbstractBaseUser, PermissionsMixin):
         return self.is_admin
 
 
-
-
-
-
-
+class Activity(BaseModel):
+    user = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
+    body = models.JSONField(null=True, blank=True)

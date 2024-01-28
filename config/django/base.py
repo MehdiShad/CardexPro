@@ -78,10 +78,17 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-
-DATABASES = {
-    'default': env.db('DATABASE_URL', default='psql://postgres:2011@127.0.0.1:5432/brxdatagrabber'),
-}
+if env.bool("NEED_LOCAL_DB"):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / "db.sqlite3",  # Assuming db.sqlite3 is in your project's base directory
+        }
+    }
+else:
+    DATABASES = {
+        'default': env.db('DATABASE_URL', default='psql://postgres:2011@127.0.0.1:5432/cardexpro'),
+    }
 
 
 DATABASES['default']['ATOMIC_REQUESTS'] = True
