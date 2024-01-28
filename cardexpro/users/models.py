@@ -56,3 +56,17 @@ class BaseUser(BaseModel, AbstractBaseUser, PermissionsMixin):
 class Activity(BaseModel):
     user = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
     body = models.JSONField(null=True, blank=True)
+
+    @classmethod
+    def create_activity(cls, user: BaseUser, **kwargs) -> 'Activity':
+        create_fields = {key: value for key, value in kwargs.items() if value is not None}
+        create_fields['user'] = user
+
+        activity = cls.objects.create(**create_fields)
+        return activity
+
+    @classmethod
+    def get_activity(cls, user: BaseUser):
+        return cls.objects.filter(user=user)
+
+

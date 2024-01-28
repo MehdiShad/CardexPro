@@ -1,6 +1,7 @@
 from django.urls import path
-from .apis import RegisterApi
+from cardexpro.users import apis
 
 urlpatterns = [
-    path('register/', RegisterApi.as_view(),name="register"),
+    path('register/', apis.RegisterApi.as_view(), name="register"),
+    path('activities/', apis.ActivitiesApi.as_view(), name="activities"),
 ]
