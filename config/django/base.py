@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-if env.bool("NEED_LOCAL_DB"):
+if not env.bool("NEED_LOCAL_DB"):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
